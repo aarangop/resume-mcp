@@ -1,0 +1,25 @@
+[project]
+name = "resume-mcp"
+version = "0.1.0"
+description = "AI-powered resume tailoring tool using FastMCP"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.9.1",
+    "pathlib2>=2.3.7.post1",
+    "pip>=25.1.1",
+    "python-dotenv>=1.1.0",
+]
+
+[project.scripts]
+resume-mcp-server = "resume_mcp.server:mcp.run"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
