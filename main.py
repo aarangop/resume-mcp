@@ -4,7 +4,7 @@ Main entry point for running the resume tailoring MCP server
 """
 
 import logging
-from resume_mcp.server import mcp
+from resume_mcp import mcp
 
 if __name__ == "__main__":
     # Configure logging

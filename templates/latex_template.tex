@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper,sans]{moderncv}
+
+% ModernCV themes
+\moderncvstyle{classic} % or 'banking', 'casual', 'classic', 'oldstyle'
+\moderncvcolor{blue}    % or 'black', 'blue', 'burgundy', 'green', 'grey', 'orange', 'purple', 'red'
+
+% Character encoding
+\usepackage[utf8]{inputenc}
+
+% Adjust page margins
+\usepackage[scale=0.75]{geometry}
+
+% Bibliography with mutiple entries
+\usepackage{multibib}
+\newcites{book,misc}{{Books},{Others}}
+
+% Personal data
+\name{$first_name}{$last_name}
+\title{$professional_title}
+\address{$address_line_1}{$address_line_2}{$city_country}
+\phone[mobile]{$phone}
+\email{$email}
+\social[linkedin]{$linkedin}
+\social[github]{$github}
+\quote{$professional_summary}
+
+% Page numbers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+% Make the title
+\makecvtitle
+
+% Professional Profile Section
+\section{Professional Profile}
+$professional_profile
+
+% Technical Skills Section
+\section{Technical Skills}
+\cvitem{AI \& ML}{$ai_ml_skills}
+\cvitem{Programming}{$programming_skills}
+\cvitem{Web Development}{$web_dev_skills}
+\cvitem{Cloud \& DevOps}{$cloud_devops_skills}
+\cvitem{Databases}{$database_skills}
+\cvitem{Languages}{$spoken_languages}
+
+% Professional Experience Section
+\section{Professional Experience}
+$professional_experience_entries
+
+% Education Section
+\section{Education}
+$education_entries
+
+% Key Projects Section
+\section{Key Projects}
+$key_projects_entries
+
+% Publications (if any)
+$publications_section
+
+% Awards and Certifications (if any)
+$awards_certifications_section
+
+% Additional Sections
+$additional_sections
+
+\end{document}
