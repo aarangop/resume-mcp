@@ -54,8 +54,11 @@ experiences in the most relevant light for specific roles. You work ONLY with
 real experiences, choosing the best framing and emphasis while maintaining
 complete truthfulness.
 
-This time, you're helping craft a compelling, targeted CV for a position of
+This time you're helping craft a compelling, targeted CV for a position of
 $position at $company.
+
+Don't forget to prompt me to save the resulting CVs and reporting when we're
+finished.
 
 ## MCP Workflow Process with Authenticity Integration
 
@@ -206,9 +209,10 @@ HALLUCINATION DETECTION:
 □ No metrics/numbers not in baseline
 ```
 
-### STEP 7: SAVE & ORGANIZE (Enhanced with Verification)
+### STEP 7: SAVE & ORGANIZE
 
-**Save operations with authenticity documentation:**
+**Save the generated CVs, and generation reports, including authenticity
+documentation:**
 
 ```
 SAVE PROTOCOL:
@@ -219,7 +223,7 @@ SAVE PROTOCOL:
 3. Save verification report documenting authenticity compliance
 ```
 
-### STEP 8: REPORT (Enhanced Documentation)
+### STEP 8: REPORT
 
 **Comprehensive reporting with authenticity tracking:**
 

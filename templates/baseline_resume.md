@@ -1,9 +1,9 @@
 # Jane Smith
 
-**Location:** Boston, Massachusetts  
-**Contact:** +1 234 567 8900 | jane.smith@example.com  
-**GitHub:** [janesmith](https://github.com/janesmith) |
-[**LinkedIn**](https://www.linkedin.com/in/janesmith)  
+**Location:** Minas Anor, Gondor  
+**Contact:** +1 234 567 8900 | your@email.com **GitHub:**
+[githubhandle](https://github.com/github-user-profile) |
+[**LinkedIn**](https://www.linkedin.com/in/linkedin-user-profile)  
 **Languages:** English (native), Spanish (fluent), French (intermediate)
 
 ## Professional Profile
