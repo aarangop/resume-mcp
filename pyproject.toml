@@ -5,21 +5,31 @@ description = "AI-powered resume tailoring tool using FastMCP"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "anthropic>=0.52.1",
+    "fuzzywuzzy>=0.18.0",
     "mcp[cli]>=1.9.1",
+    "numpy>=2.2.6",
     "pathlib2>=2.3.7.post1",
     "pip>=25.1.1",
     "python-dotenv>=1.1.0",
+    "python-levenshtein>=0.27.1",
 ]
 
 [project.scripts]
 resume-mcp-server = "resume_mcp.server:mcp.run"
 
-[project.optional-dependencies]
-test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+asyncio_mode = "auto"
+markers = [
+    "real_api: marks tests that make real API calls (may incur costs)"
+]
+
+[dependency-groups]
+dev = [
+    "anyio>=4.9.0",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+]

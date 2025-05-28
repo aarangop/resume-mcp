@@ -1,12 +1,16 @@
-import logging
-from typing import Optional, cast
-from resume_mcp.mcp.base import AppContext, mcp
+"""
+Career Guidance Prompts Module
+"""
 
-# Configure logger
+import logging
+from typing import Optional
+
+from ..base import mcp, get_app_context
+
 logger = logging.getLogger(__name__)
 
 
-@mcp.prompt()
+@mcp.prompt(name="Analyze Job Fit")
 def analyze_job_fit(job_description: str) -> str:
     """
     Analyze how well your background fits a specific job posting.
@@ -21,8 +25,7 @@ def analyze_job_fit(job_description: str) -> str:
         raise ValueError("Job description cannot be empty")
 
     # Get app context
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+    app_ctx = get_app_context()
 
     baseline_resume = app_ctx.resume_manager.get_baseline_content()
 
@@ -64,8 +67,7 @@ def cover_letter_prompt(
         raise ValueError("Job description cannot be empty")
 
     # Get app context
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+    app_ctx = get_app_context()
 
     baseline_resume = app_ctx.resume_manager.get_baseline_content()
 
@@ -114,8 +116,7 @@ def interview_prep(
         raise ValueError("Job description cannot be empty")
 
     # Get app context
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+    app_ctx = get_app_context()
 
     baseline_resume = app_ctx.resume_manager.get_baseline_content()
 

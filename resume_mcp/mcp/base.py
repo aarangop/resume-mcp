@@ -1,5 +1,5 @@
 """
-Base MCP server configuration and shared components
+Base MCP Server Configuration and Lifespan Management
 """
 
 import logging
@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 from mcp.server.fastmcp import FastMCP
 
@@ -67,10 +68,16 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
     finally:
         logger.info("Shutting down Resume Tailoring MCP Server...")
 
-
-# Create FastMCP server with lifespan
+# Create the FastMCP server instance - THIS IS THE KEY!
 mcp = FastMCP(SERVER_NAME, lifespan=app_lifespan)
 
-# Add debug logging for transport detection
 logger.info(f"Server initialized: {SERVER_NAME}")
 logger.info("Transport will be auto-detected based on how server is invoked")
+
+# Helper function to get app context (used by all modules)
+
+
+def get_app_context() -> AppContext:
+    """Get the application context from the MCP server"""
+    ctx = mcp.get_context()
+    return cast(AppContext, ctx.request_context.lifespan_context)

@@ -1,9 +1,14 @@
-import logging
-from typing import cast
-from resume_mcp.config import LATEX_OUTPUT_DIR, SERVER_NAME
-from resume_mcp.mcp.base import AppContext, mcp
+"""
+Management Tools Module
+"""
 
-# Configure logger
+import logging
+import subprocess
+from pathlib import Path
+
+from ..base import mcp, get_app_context
+from ...config import LATEX_OUTPUT_DIR, SERVER_NAME
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,8 +23,7 @@ def reload_templates() -> str:
     """
     try:
         # Get app context with proper typing
-        ctx = mcp.get_context()
-        app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+        app_ctx = get_app_context()
 
         app_ctx.prompt_manager.reload_templates()
         app_ctx.resume_manager.reload_baseline()
@@ -42,8 +46,7 @@ def get_server_status() -> str:
     """
     try:
         # Get app context with proper typing
-        ctx = mcp.get_context()
-        app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+        app_ctx = get_app_context()
 
         # Check file existence
         template_exists = app_ctx.prompt_manager.template_path.exists()
@@ -102,3 +105,98 @@ Use the prompts directly in your MCP client. For LaTeX output, use:
         error_msg = f"❌ Error getting server status: {str(e)}"
         logger.error(error_msg)
         return error_msg
+
+
+@mcp.tool()
+def validate_latex_setup() -> str:
+    """
+    Validate LaTeX template and compilation setup.
+
+    Returns:
+        Validation report for LaTeX configuration
+    """
+    try:
+        app_ctx = get_app_context()
+
+        report = "# LaTeX Setup Validation\n\n"
+
+        # Check template
+        is_valid, message = app_ctx.prompt_manager.validate_latex_template()
+        report += f"## Template Status: {'✅ Valid' if is_valid else '❌ Invalid'}\n"
+        report += f"- {message}\n\n"
+
+        # Check LaTeX installation
+        try:
+            result = subprocess.run(['pdflatex', '--version'],
+                                    capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                report += "## LaTeX Installation: ✅ Found\n"
+                report += f"- Version: {result.stdout.split()[0]} available\n\n"
+            else:
+                report += "## LaTeX Installation: ❌ Not Working\n\n"
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            report += "## LaTeX Installation: ❌ Not Found\n"
+            report += "- Install LaTeX (TeX Live, MiKTeX, or MacTeX) to compile PDFs\n\n"
+
+        # Check directories
+        latex_dir = Path(LATEX_OUTPUT_DIR)
+        report += f"## Output Directory: {'✅ Ready' if latex_dir.exists() else '❌ Missing'}\n"
+        report += f"- LaTeX Output: {latex_dir}\n\n"
+
+        # Template info
+        latex_template = app_ctx.prompt_manager.get_latex_template()
+        if latex_template:
+            template_size = len(latex_template)
+            report += f"## Template Info:\n"
+            report += f"- Size: {template_size} characters\n"
+            report += f"- Path: {app_ctx.prompt_manager.latex_template_path}\n"
+
+        return report
+
+    except Exception as e:
+        return f"❌ Error validating LaTeX setup: {str(e)}"
+
+
+@mcp.tool()
+def get_latex_template_info() -> str:
+    """
+    Get information about the current LaTeX template.
+
+    Returns:
+        LaTeX template details and structure
+    """
+    try:
+        app_ctx = get_app_context()
+
+        latex_template = app_ctx.prompt_manager.get_latex_template()
+        if not latex_template:
+            return "❌ No LaTeX template loaded"
+
+        # Extract placeholders
+        import re
+        placeholders = re.findall(r'\$\w+', latex_template)
+        unique_placeholders = sorted(set(placeholders))
+
+        return f"""# LaTeX Template Information
+
+## Template Path
+{app_ctx.prompt_manager.latex_template_path}
+
+## Template Size
+{len(latex_template)} characters
+
+## Available Placeholders
+{chr(10).join(f'- {p}' for p in unique_placeholders)}
+
+## Template Preview (First 500 characters)
+```latex
+{latex_template[:500]}{'...' if len(latex_template) > 500 else ''}
+```
+
+## Usage
+Use the `tailor_resume_dual_format` or `latex_only_tailor` prompts to generate 
+tailored LaTeX CVs using this template.
+"""
+
+    except Exception as e:
+        return f"❌ Error getting LaTeX template info: {str(e)}"

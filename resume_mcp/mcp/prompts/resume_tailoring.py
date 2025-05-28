@@ -1,16 +1,24 @@
-import logging
-from typing import Optional, cast
-from resume_mcp.mcp.base import AppContext, mcp
+"""
+Resume Tailoring Prompts Module
+"""
 
-# Configure logger
+import logging
+from pathlib import Path
+from typing import Optional
+
+from resume_mcp.config import OBSIDIAN_VAULT
+from resume_mcp.utils.cv import generate_cv_tailoring_prompt
+
+from ..base import mcp, get_app_context
+
 logger = logging.getLogger(__name__)
 
 
-@mcp.prompt()
+@mcp.prompt(name="Tailor CV")
 def tailor_resume(
     job_description: str,
-    job_title: Optional[str] = "Position",
-    company: Optional[str] = ""
+    company: str,
+    position: str
 ) -> str:
     """
     Generate a tailored resume prompt for a specific job description.
@@ -28,125 +36,24 @@ def tailor_resume(
         raise ValueError("Job description cannot be empty")
 
     # Get app context with proper typing
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+    app_ctx = get_app_context()
 
-    # Generate the complete prompt
-    variables = {
-        "baseline_resume": app_ctx.resume_manager.get_baseline_content(),
-        "job_description": job_description
-    }
-
-    tailored_prompt = app_ctx.prompt_manager.substitute_variables(variables)
+    tailored_prompt = generate_cv_tailoring_prompt(
+        job_description,
+        company,
+        position,
+        app_ctx
+    )
 
     # Log the usage for monitoring
     logger.info(
-        f"Generated resume tailoring prompt for {job_title} at {company}")
+        f"Generated resume tailoring prompt for {position} at {company}")
 
     return tailored_prompt
 
 
-@mcp.prompt()
-def tailor_resume_dual_format(
-    job_description: str,
-    job_title: Optional[str] = "Position",
-    company: Optional[str] = ""
-) -> str:
-    """
-    Generate a tailored resume in BOTH Markdown and LaTeX formats.
-
-    This prompt creates professionally formatted CVs in both Markdown (for easy editing)
-    and LaTeX (for professional PDF compilation) that emphasize your most relevant 
-    experiences while maintaining 100% authenticity.
-
-    Args:
-        job_description: The complete job description to tailor the resume for
-        job_title: The job title (used for context and logging)
-        company: The company name (used for context and logging)
-    """
-    if not job_description.strip():
-        raise ValueError("Job description cannot be empty")
-
-    # Get app context with proper typing
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
-
-    # Generate the complete prompt with LaTeX template
-    variables = {
-        "baseline_resume": app_ctx.resume_manager.get_baseline_content(),
-        "job_description": job_description
-    }
-
-    tailored_prompt = app_ctx.prompt_manager.substitute_variables(variables)
-
-    # Log the usage for monitoring
-    logger.info(
-        f"Generated dual-format resume prompt for {job_title} at {company}")
-
-    return tailored_prompt
-
-
-@mcp.prompt()
-def latex_only_tailor(
-    job_description: str,
-    job_title: Optional[str] = "Position",
-    company: Optional[str] = ""
-) -> str:
-    """
-    Generate a tailored resume specifically in LaTeX format.
-
-    Focus on creating a professional LaTeX CV that compiles to PDF,
-    using your authentic experience tailored for the specific role.
-
-    Args:
-        job_description: The complete job description to tailor the resume for
-        job_title: The job title (used for context and logging)  
-        company: The company name (used for context and logging)
-    """
-    if not job_description.strip():
-        raise ValueError("Job description cannot be empty")
-
-    # Get app context
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
-
-    baseline_resume = app_ctx.resume_manager.get_baseline_content()
-    latex_template = app_ctx.prompt_manager.get_latex_template()
-
-    if not latex_template:
-        raise ValueError("No LaTeX template available")
-
-    return f"""You are an expert LaTeX document creator specializing in professional CVs.
-
-CRITICAL RULES:
-- Use ONLY the authentic experiences provided
-- NEVER add fictional companies, roles, or achievements
-- Create valid LaTeX that compiles without errors
-- Follow the provided template structure exactly
-
-MY AUTHENTIC PROFESSIONAL BACKGROUND:
-{baseline_resume}
-
-LATEX TEMPLATE TO USE:
-```latex
-{latex_template}
-```
-
-TARGET JOB DESCRIPTION:
-{job_description}
-
-Please create a tailored LaTeX CV that:
-1. Uses the exact template structure provided
-2. Emphasizes experiences most relevant to this {job_title} role
-3. Incorporates keywords from the job description appropriately
-4. Maintains perfect LaTeX syntax
-5. Stays 100% truthful to my actual background
-
-Provide ONLY the complete LaTeX code, ready for compilation."""
-
-
-@mcp.prompt()
-def quick_tailor(job_description: str) -> str:
+@mcp.prompt(name="Quick CV Tailor")
+def quick_tailor(job_description: str, company: str, position: str) -> str:
     """
     Quick resume tailoring with minimal prompt engineering.
 
@@ -160,8 +67,7 @@ def quick_tailor(job_description: str) -> str:
         raise ValueError("Job description cannot be empty")
 
     # Get app context
-    ctx = mcp.get_context()
-    app_ctx = cast(AppContext, ctx.request_context.lifespan_context)
+    app_ctx = get_app_context()
 
     baseline_resume = app_ctx.resume_manager.get_baseline_content()
 
@@ -177,6 +83,8 @@ MY AUTHENTIC PROFESSIONAL BACKGROUND:
 {baseline_resume}
 
 TARGET JOB DESCRIPTION:
+{position} at {company}
+
 {job_description}
 
 Please create a tailored resume that:
@@ -187,3 +95,20 @@ Please create a tailored resume that:
 5. Stays 100% truthful to my actual background
 
 Provide the tailored resume focusing on the experiences most relevant to this position."""
+
+
+@mcp.prompt(name="Load prompt", description="Loads a specific prompt from the Obsidian vault 'prompts' directory")
+def load_prompt(prompt_name: str):
+    vault_path = Path(OBSIDIAN_VAULT)
+
+    prompt_file = next(vault_path.rglob(f"prompts/{prompt_name}.md"), None)
+
+    if not prompt_file:
+        return f"No prompt named {prompt_name} found in vault"
+
+    logger.info(f"Found at least one matching prompt file.")
+
+    with open(prompt_file, mode='+r') as f:
+        prompt = f.read()
+
+    return prompt
