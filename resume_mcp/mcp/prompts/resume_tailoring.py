@@ -4,10 +4,12 @@ Resume Tailoring Prompts Module
 
 import logging
 from pathlib import Path
+from string import Template
 from typing import Optional
 
 from resume_mcp.config import OBSIDIAN_VAULT
 from resume_mcp.utils.cv import generate_cv_tailoring_prompt
+from resume_mcp.utils.prompt_templates import cv_generation_recipe_template
 
 from ..base import mcp, get_app_context
 
@@ -112,3 +114,29 @@ def load_prompt(prompt_name: str):
         prompt = f.read()
 
     return prompt
+
+
+@mcp.prompt(name="CV Generation Recipe", description="Kickstart a CV generation using the resume-mcp server")
+def cv_generation_recipe(company: str, position: str):
+    """
+    Generate a recipe for CV tailoring based on a company and position.
+
+    This function returns a tailored recipe using a predefined template for CV generation,
+    filling in the provided company name and position.
+
+    Parameters
+    ----------
+    company : str
+        The name of the company the CV is being tailored for
+    position : str
+        The position title the CV is being tailored for
+
+    Returns
+    -------
+    str
+        A populated CV generation recipe with the company and position substituted
+    """
+    template = Template(cv_generation_recipe_template)
+    return template.safe_substitute({
+        "company": company, "position": position
+    })

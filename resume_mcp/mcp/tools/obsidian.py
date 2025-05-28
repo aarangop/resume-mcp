@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @mcp.tool(
     name="search_job_description",
     description="Search through Obsidian vault for notes matching a job description or term")
-def search_job_description(job_description: str, limit=10) -> str:
+def search_job_description(search_param: str, limit=10) -> str:
     """
     Search through Obsidian vault for notes matching the job description.
 
@@ -29,7 +29,7 @@ def search_job_description(job_description: str, limit=10) -> str:
         Content of matching notes or list of available files if no matches
     """
 
-    if not job_description.strip():
+    if not search_param.strip():
         return "❌ Job description parameter cannot be empty"
 
     vault_path = Path(OBSIDIAN_VAULT)
@@ -42,13 +42,15 @@ def search_job_description(job_description: str, limit=10) -> str:
         return f"❌ Obsidian vault path is not a directory: {OBSIDIAN_VAULT}"
 
     results = fuzzy_search_files(
-        job_description, min_score=70, limit=20)
+        search_param, min_score=50, limit=20)
 
     if not results:
-        files_list = [filename for filename in vault_path.rglob("*.md")]
-        return f"""❌ No files matched '{job_description}'
+        files_list = [str(filename)
+                      for filename in vault_path.rglob("*.md")]
+        files_list_str = "\n\t- ".join(files_list)
+        return f"""❌ No files matched '{search_param}'
 ## Available files in vault:
-- {files_list[:20]}
+{files_list_str}
 
 ## Search Tips:
 - Try partial matches (e.g., 'ml', 'engineer', 'python')
@@ -80,7 +82,7 @@ def search_job_description(job_description: str, limit=10) -> str:
 
     result = f"""# Obsidian Vault Search Results
 
-**Search term:** {job_description}
+**Search term:** {search_param}
 **Matches found:** {len(results)}
 **Showing:** {len(combined_content)} files
 
@@ -92,7 +94,7 @@ def search_job_description(job_description: str, limit=10) -> str:
         result += f"\n\n**Note:** {len(results) - 5} additional matches not shown. Use more specific search terms."
 
     logger.info(
-        f"Found {len(results)} matches for '{job_description}'")
+        f"Found {len(results)} matches for '{search_param}'")
     return result
 
 
@@ -227,7 +229,7 @@ def fuzzy_search_obsidian(
     min_score: int = 60,
     subdir: str = "",
     limit: int = 10,
-    include_content: bool = False
+    include_content: bool = True
 ) -> str:
     """
     Search for files in the Obsidian vault using fuzzy string matching on filenames.

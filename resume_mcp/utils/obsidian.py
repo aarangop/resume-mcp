@@ -63,8 +63,13 @@ def fuzzy_search_files(
     logger.info(f"Found {len(all_md_files)} markdown files")
 
     # Calculate fuzzy match scores
-    scores = np.array([fuzz.ratio(search_term.lower(), str(filename.stem).lower())
-                       for filename in all_md_files])
+    scores = np.array([
+        max(
+            fuzz.ratio(search_term.lower(), str(filename.stem).lower()),
+            fuzz.partial_ratio(search_term.lower(), str(filename.stem).lower())
+        )
+        for filename in all_md_files
+    ])
 
     matched_files = zip(all_md_files, scores)
 
@@ -74,7 +79,8 @@ def fuzzy_search_files(
         "filename": match.stem,
         "relative_path": str(match.relative_to(path))
     } for match, score in matched_files if score > min_score]
-
+    logger.info(
+        f"Found {len(matches)} matching files for search term '{search_term}'")
     # Sort by score descending
     matches.sort(key=lambda x: x["score"], reverse=True)
 
