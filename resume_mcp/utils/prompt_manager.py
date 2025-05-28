@@ -95,7 +95,7 @@ class PromptTemplateManager:
             else:
                 variables['latex_template'] = "No LaTeX template provided"
 
-            required_variables = ['job_description', 'company', 'position']
+            required_variables = ['company', 'position']
 
             for required in required_variables:
                 if not required in variables:

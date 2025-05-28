@@ -69,7 +69,11 @@ def parse_cv_response(response: str) -> Dict[str, str]:
     return result
 
 
-def generate_cv_tailoring_prompt(job_description: str, company: str, position: str, app_ctx: AppContext) -> str:
+def generate_cv_tailoring_prompt(
+        company: str,
+        position: str,
+        app_ctx: AppContext,
+        job_description: str = "") -> str:
     """
     Generate a prompt for tailoring a resume/CV to a specific job description.
 
@@ -147,7 +151,7 @@ async def autogenerate_cv(job_description: str, company: str, position: str, app
     # Step 1: Generate the tailoring prompt
     logger.info("📝 Generating tailoring prompt...")
     prompt = generate_cv_tailoring_prompt(
-        job_description, company, position, app_ctx)
+        company, position, app_ctx, job_description=job_description)
 
     # Step 3: Call LLM with prompt
     logger.info("🤖 Executing prompt with LLM...")

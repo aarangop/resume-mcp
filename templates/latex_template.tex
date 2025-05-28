@@ -1,73 +1,61 @@
-\documentclass[11pt,a4paper,sans]{moderncv}
-
-% ModernCV themes
-\moderncvstyle{classic} % or 'banking', 'casual', 'classic', 'oldstyle'
-\moderncvcolor{blue}    % or 'black', 'blue', 'burgundy', 'green', 'grey', 'orange', 'purple', 'red'
-
-% Character encoding
-\usepackage[utf8]{inputenc}
-
-% Adjust page margins
-\usepackage[scale=0.75]{geometry}
-
-% Bibliography with mutiple entries
-\usepackage{multibib}
-\newcites{book,misc}{{Books},{Others}}
-
-% Personal data
-\name{$first_name}{$last_name}
-\title{$professional_title}
-\address{$address_line_1}{$address_line_2}{$city_country}
-\phone[mobile]{$phone}
-\email{$email}
-\social[linkedin]{$linkedin}
-\social[github]{$github}
-\quote{$professional_summary}
-
-% Page numbers
+\documentclass[11pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\setlength{\parindent}{0pt}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage{helvet} % Arial-like font
+\renewcommand{\familydefault}{\sfdefault} % Use the sans-serif font throughout
+\usepackage[left=1.75cm,top=1.cm,right=1.75cm,bottom=1.2cm]{geometry} % Reduced margins
 \usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
-\cfoot{\thepage}
+\pagestyle{empty}
 
 \begin{document}
+\begin{center}
+    \textbf{\Large $name}\\ 
+    \hrulefill
+\end{center}
+\begin{center}
+	123 Main Street, City, Country \textbullet \ +1 234 567 8900 \textbullet \ \href{mailto:name@example.com}{name@example.com} \textbullet \ \href{https://www.linkedin.com/in/username}{LinkedIn} \textbullet \ \href{https://github.com/username}{GitHub}
+\end{center}
 
-% Make the title
-\makecvtitle
+\begin{center}
+    \textbf{PROFILE}
+\end{center}
+$profile
 
-% Professional Profile Section
-\section{Professional Profile}
-$professional_profile
+\begin{center}
+    \textbf{TECHNICAL SKILLS}
+\end{center}
+$technical_skills
 
-% Technical Skills Section
-\section{Technical Skills}
-\cvitem{AI \& ML}{$ai_ml_skills}
-\cvitem{Programming}{$programming_skills}
-\cvitem{Web Development}{$web_dev_skills}
-\cvitem{Cloud \& DevOps}{$cloud_devops_skills}
-\cvitem{Databases}{$database_skills}
-\cvitem{Languages}{$spoken_languages}
+\begin{center}
+    \textbf{PROFESSIONAL EXPERIENCE}
+\end{center}
+$professional_experience
 
-% Professional Experience Section
-\section{Professional Experience}
-$professional_experience_entries
+\begin{center} 
+    \textbf{EDUCATION} 
+\end{center}
+\hypertarget{education}{}
 
-% Education Section
-\section{Education}
-$education_entries
+\textbf{Coursera AWS Fundamentals Specialization} (Completed May 2025) \hfill Online
 
-% Key Projects Section
-\section{Key Projects}
-$key_projects_entries
+\vspace{4pt}
 
-% Publications (if any)
-$publications_section
+\textbf{DeepLearning.AI} \hfill Online\\
+Deep Learning Specialization (Completed May 2025), Mathematics for ML and Data Science (Completed Jan. 2025), Supervised Machine Learning Course (2022)
+\vspace{4pt}
 
-% Awards and Certifications (if any)
-$awards_certifications_section
+\textbf{Wildau Institute of Technology} \hfill Wildau, Germany\\
+M.Eng. Aeronautical Engineering (2019), B.Eng. Aeronautical Engineering (2015)\\
+Master Thesis: "A Study on the Implementation of Mixed Reality in Flight Operations"
 
-% Additional Sections
-$additional_sections
+\begin{center} 
+    \textbf{\uppercase{Projects}}
+\end{center}
+\hypertarget{projects}{}
+$relevant_projects
 
 \end{document}

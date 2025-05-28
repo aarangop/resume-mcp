@@ -97,7 +97,7 @@ For development and testing, you can run the server with the MCP Inspector:
 ./inspect.sh
 
 # Or manually
-npx @modelcontextprotocol/inspector uv --directory /Users/andresap/repos/resume-mcp run main.py
+npx @modelcontextprotocol/inspector uv run main.py
 ```
 
 ### Debugging Issues
@@ -116,8 +116,18 @@ The server provides several prompts and tools for resume tailoring:
 
 ### Prompts
 
+The easiest way to interact with the server is through the provided prompts:
+
 1. **Tailor CV** - Create a customized resume based on a job description
 2. **Career Guidance** - Get career advice and resume feedback
+
+These prompts need templates to be present in your system, and configured
+through an .env file.
+
+Alternatively, you can modify the prompts to make the LLM ask you for the
+required input. You can also make use of the MCP tools to access files in your
+file system with relevant information, such as your baseline resume or job
+descriptions.
 
 ### Tools
 
@@ -144,16 +154,14 @@ The server provides several prompts and tools for resume tailoring:
 ### Baseline Resume
 
 Your starting resume in Markdown format from which tailored versions are
-created.
-
-### Prompt Template
-
-Template used for generating the resume tailoring instructions.
+created. The project includes a sample baseline resume that you can modify with
+your information.
 
 ### LaTeX Template
 
-LaTeX template for generating professional PDFs. Must include required
-placeholders like `$name`.
+LaTeX template for generating professional PDFs. The template must include
+required placeholders (like `$name`, `$profile`, `$technical_skills`, etc.) that
+will be replaced with the corresponding sections from your tailored resume.
 
 ## 📚 Example Workflow
 
@@ -167,27 +175,99 @@ placeholders like `$name`.
 
 ## 🔍 Troubleshooting
 
-### LaTeX Template Issues
+### Common Issues & Solutions
+
+#### LaTeX Template Issues
 
 If you see warnings about missing placeholders in your LaTeX template, check
-that it includes all required fields like `$name`.
+that it includes all required fields like `$name`, `$profile`,
+`$technical_skills`, etc.
 
-### Initialization Problems
+#### Initialization Problems
 
 If you encounter
-`RuntimeError: Received request before initialization was complete`, try:
+`RuntimeError: Received request before initialization was complete`:
 
-1. Adding a small delay after importing components
-2. Using the debug server to identify issues
-3. Make sure all imports are properly structured
+1. Add a small delay after importing components
+2. Check your import structure in `resume_mcp/mcp/__init__.py` - make sure all
+   components are properly imported
+3. Try running with the debug server to identify specific issues:
+   ```python
+   python debug_server.py
+   ```
 
-### MCP Connection Issues
+#### MCP Connection Issues
 
 If clients cannot connect to the server:
 
 1. Check that stdio transport is working correctly
 2. Verify that all required components are imported
-3. Run with the inspector for detailed logs
+3. Run with the inspector for detailed logs:
+   ```bash
+   ./inspect.sh
+   ```
+
+#### Obsidian Integration Issues
+
+If Obsidian integration isn't working:
+
+1. Verify the `OBSIDIAN_VAULT` path in your `.env` file
+2. Check file permissions for the Obsidian vault directory
+3. Test basic Obsidian operations through the debug server
+
+### Advanced Debugging
+
+For more detailed debugging:
+
+1. Set `LOG_LEVEL="DEBUG"` in your `.env` file
+2. Run the server with the inspector to get detailed logs
+3. Check `inspect.log` for error messages and execution flow
+4. Use the `debug_server.py` script to verify component initialization
+
+## 🧩 Extending the Server
+
+### Adding New Prompts
+
+Create new prompt files in the `resume_mcp/mcp/prompts` directory:
+
+```python
+from resume_mcp.mcp.base import mcp
+
+@mcp.prompt(name="My Custom Prompt")
+def my_custom_prompt():
+    return {
+        "description": "Description of what this prompt does",
+        "prompt": "Your prompt template here"
+    }
+```
+
+### Adding New Tools
+
+Create new tool files in the `resume_mcp/mcp/tools` directory:
+
+```python
+from resume_mcp.mcp.base import mcp
+
+@mcp.tool()
+def my_custom_tool(param1, param2=None):
+    """Documentation for the tool.
+
+    Args:
+        param1: Description of param1
+        param2: Description of param2
+    """
+    # Tool implementation
+    return {"result": "Tool output"}
+```
+
+### Custom Templates
+
+You can create custom LaTeX templates in the `templates/` directory. Make sure
+to:
+
+1. Include all required placeholders
+2. Test with the validation tool
+3. Update your `.env` configuration to use the new template
 
 ## 📜 License
 

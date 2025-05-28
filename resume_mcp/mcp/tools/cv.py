@@ -19,10 +19,10 @@ def generate_cv_tailoring_prompt(
 
     app_ctx = get_app_context()
     tailored_prompt = gen_cv_prompt(
-        job_description,
         company,
         position,
-        app_ctx
+        app_ctx,
+        job_description=job_description
     )
     output_file = os.path.join(OBSIDIAN_VAULT, "prompts", f"{prompt_name}.md")
     with open(output_file, mode='+w') as f:

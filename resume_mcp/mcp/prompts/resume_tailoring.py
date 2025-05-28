@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 @mcp.prompt(name="Tailor CV")
 def tailor_resume(
-    job_description: str,
     company: str,
     position: str
 ) -> str:
@@ -34,14 +33,11 @@ def tailor_resume(
         job_title: The job title (used for context and logging)
         company: The company name (used for context and logging)
     """
-    if not job_description.strip():
-        raise ValueError("Job description cannot be empty")
 
     # Get app context with proper typing
     app_ctx = get_app_context()
 
     tailored_prompt = generate_cv_tailoring_prompt(
-        job_description,
         company,
         position,
         app_ctx

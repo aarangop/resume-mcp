@@ -1,171 +1,181 @@
-# Andrés Arango Pérez
+# Jane Smith
 
-**Location:** Medellín, Colombia  
-**Contact:** +57 311 346 70 36 | andresap@proton.me  
-**GitHub:** [aarangop](https://github.com/aarangop) |
-[**LinkedIn**](https://www.linkedin.com/in/andres-arango-perez-789493228/)  
-**Languages:** Spanish (native), German (fluent), English (fluent)
+**Location:** Boston, Massachusetts  
+**Contact:** +1 234 567 8900 | jane.smith@example.com  
+**GitHub:** [janesmith](https://github.com/janesmith) |
+[**LinkedIn**](https://www.linkedin.com/in/janesmith)  
+**Languages:** English (native), Spanish (fluent), French (intermediate)
 
 ## Professional Profile
 
-Versatile software developer with 10+ years of programming experience
-transitioning from aviation research to AI and Machine Learning. Combines strong
-mathematical foundations with full-stack development expertise to build robust
-APIs and ML solutions. Experience with LLMs, prompt engineering, and AWS
-deployment. Excellent communication skills and proven ability to work in
-multicultural environments.
+Innovative software engineer with 8+ years of experience specializing in machine
+learning and cloud-based solutions. Proven track record of developing scalable
+applications and implementing data-driven solutions. Strong background in Python
+development with expertise in modern ML frameworks, cloud services, and API
+development. Effective communicator with excellent problem-solving abilities and
+passion for creating impactful technology.
 
 ## Technical Skills
 
-- **AI & ML:** TensorFlow, scikit-learn, pandas, NumPy, Hugging Face, prompt
-  engineering
-- **Web Development:** FastAPI, React, Next.js, Node.js, Svelte, Vue.js,
+- **AI & ML:** TensorFlow, PyTorch, scikit-learn, pandas, NumPy, LLM
+  Integration, prompt engineering
+- **Web Development:** FastAPI, Django, React, Next.js, Angular, Node.js,
   TypeScript/JavaScript
-- **Cloud & DevOps:** AWS, Docker, CI/CD pipelines
-- **Programming Languages:** Python, TypeScript/JavaScript, Rust, C++
-- **Databases:** SQL, MongoDB
+- **Cloud & DevOps:** AWS, Azure, Docker, Kubernetes, CI/CD pipelines
+- **Programming Languages:** Python, JavaScript, TypeScript, Go, Java
+- **Databases:** PostgreSQL, MongoDB, Redis, Elasticsearch
 
 ## Professional Experience
 
-### Independent ML and Software Engineer
+### Senior Machine Learning Engineer
 
-**Location:** Medellín, Colombia | **Duration:** Mar 2025 - Present
+**Organization:** TechInnovate Solutions  
+**Location:** Boston, MA | **Duration:** Jan 2023 - Present
 
-- Transitioning from aerospace research to AI/ML through structured courses,
-  specializations, and hands-on projects
-- Developing computer vision applications with FastAPI backends deployed on AWS
-- Learning and applying deep learning techniques through model training and
-  fine-tuning on practical projects
-- Building DevOps skills by implementing CI/CD pipelines, containerization, and
-  AWS services
-- Strengthening fundamentals by implementing ML algorithms from scratch while
-  learning Rust
-- Continuously expanding knowledge through structured courses and self-directed
-  learning in GenAI concepts
+- Lead development of recommendation systems using deep learning models,
+  increasing user engagement by 32%
+- Designed and implemented scalable machine learning pipelines on AWS using
+  SageMaker, Lambda, and ECS
+- Created automated deployment workflows using GitHub Actions and Terraform,
+  reducing deployment time by 75%
+- Contributed to open-source ML libraries and presented at two major industry
+  conferences
+- Mentored junior engineers in machine learning best practices and cloud-native
+  development
+- Collaborated cross-functionally with product and data teams to define KPIs and
+  success metrics
 
-### Researcher, Developer, System Administrator, Teacher
+### Software Engineer, AI Team
 
-**Organization:** Technische Universität Braunschweig - Institute of Flight
-Guidance (IFF)  
-**Location:** Braunschweig, Germany | **Duration:** 2020 - 2024
+**Organization:** DataVision Inc.  
+**Location:** Seattle, WA | **Duration:** 2020 - 2022
 
-- Developed full-stack web applications for flight operations and HAPS (High
-  Altitude Pseudo-Satellites) research using modern JavaScript/TypeScript
-  frameworks
-- Created comprehensive data analysis and visualization tools for flight
-  mechanics and flight tracking data
-- Managed and maintained the IFF's complete digital infrastructure as System
-  Administrator
-- Maintained and developed software for fixed base A320 flight simulators,
-  enabling synchronization of multiple simulator systems and integration of new
-  hardware components
-- Developed innovative Augmented Reality applications using Microsoft HoloLens
-  for researching single pilot operations
-- Taught and mentored students in various technical subjects
+- Developed natural language processing solutions using transformer models for
+  sentiment analysis and entity recognition
+- Built RESTful APIs using FastAPI to serve ML models with high throughput and
+  low latency
+- Implemented real-time data processing pipelines using Kafka and Spark
+  Streaming
+- Contributed to the development of an internal AutoML platform that reduced
+  model training time by 40%
+- Created comprehensive data visualization dashboards using Plotly and Dash
+- Collaborated on CI/CD pipelines and infrastructure as code using GitHub
+  Actions and Terraform
 
-### Freelance/Volunteer Software Developer
+### Full-Stack Developer
 
-**Location:** Remote, Germany | **Duration:** 2020 - 2024
+**Location:** Remote | **Duration:** 2018 - 2020
 
-- Developed specialized Python tools for data analysis and visualization in
-  flight operations research campaigns conducted in full-flight simulators
-- Implemented complex mathematical models to simulate radio signal interference
-  from wind turbines
-- Refactored Python codebase for the Non-Linear Library Podcast, an automated
-  text-to-speech AI podcast generator (volunteer work)
-- Redesigned cloud functions architecture on Google Cloud Platform,
-  significantly improving reliability and reducing operational interruptions
-  (volunteer work)
+- Developed and maintained SaaS applications using Django and React for various
+  clients in finance and e-commerce
+- Implemented cloud-native architectures on AWS using containerization and
+  serverless computing
+- Created responsive frontend interfaces with React and Angular, prioritizing
+  accessibility and performance
+- Integrated third-party APIs and payment gateways into web applications
+- Collaborated with UX designers to implement intuitive user interfaces
+  following modern design principles
+- Improved application performance by optimizing database queries and
+  implementing efficient caching
 
-### Software Developer
+### Junior Software Developer
 
-**Organization:** Cavorit GmbH  
-**Location:** Berlin, Germany | **Duration:** 2017 - 2018
+**Organization:** Web Solutions Co  
+**Location:** San Francisco, CA | **Duration:** 2017 - 2018
 
-- Participated in the transformation of the Virtual Jet Engine from prototype to
-  production-ready software in direct collaboration with Rolls Royce Deutschland
-- Implemented frontend components for sophisticated jet engine simulation tools
-  using modern JavaScript frameworks
-- Collaborated closely with engineering teams to translate complex simulation
-  requirements into functional software features
+- Developed responsive web applications using modern JavaScript frameworks and
+  CSS preprocessors
+- Implemented RESTful APIs for data management using Node.js and Express
+- Collaborated with senior developers to implement new features and fix bugs
+- Participated in code reviews and contributed to improving development
+  processes
+- Assisted in database design and optimization for SQL and NoSQL databases
+- Worked closely with QA team to ensure software quality through automated and
+  manual testing
 
 ## Education
 
-### Recent AI/ML Specializations (2024-2025)
+### Professional Development & Certifications (2021-2023)
 
-- **AWS Fundamentals Specialization** - Coursera (Completed May 2025)
-- **Deep Learning Specialization** - DeepLearning.AI (Completed May 2025)
-- **Mathematics for ML and Data Science** - DeepLearning.AI (Completed Jan 2025)
-- **Supervised Machine Learning Course** - DeepLearning.AI (2022)
+- **AWS Certified Machine Learning Specialty** - Amazon Web Services (2023)
+- **Deep Learning Specialization** - DeepLearning.AI (2022)
+- **Professional Certificate in Data Science** - Harvard Online (2021)
+- **Advanced Software Architecture** - University of California Extension (2021)
 
-### Engineering Education
+### Academic Education
 
-- **M.Eng. Aeronautical Engineering** - Wildau Institute of Technology, Germany
-  (2019)
-  - Master Thesis: "A Study on the Implementation of Mixed Reality in Flight
-    Operations"
-- **B.Eng. Aeronautical Engineering** - Wildau Institute of Technology, Germany
-  (2015)
+- **M.S. Computer Science, Machine Learning Focus** - Stanford University (2017)
+  - Master's Project: "Distributed Learning Systems for Edge Computing
+    Applications"
+- **B.S. Computer Science** - University of Michigan (2015)
+  - Minor in Mathematics
 
 ## Key Projects
 
-### Who's my Good Boy? (Apr 2024 - Present)
+### SmartAssist Platform (2023 - Present)
 
-- Developing a computer vision application for pet recognition using fine-tuned
-  MobileNetV2 models in TensorFlow/Keras
-- Successfully implemented multi-class classification (cat/dog/other) as first
-  stage of progressive model refinement
-- Built and containerized a FastAPI backend with complete CI/CD pipeline using
-  GitHub Actions for automated testing
-- Currently implementing AWS deployment strategy using ECS/Fargate and designing
-  Next.js frontend with TypeScript
+- Architected and led development of an AI assistant platform using
+  transformer-based models and fine-tuning techniques
+- Built scalable REST API with FastAPI that handles 1M+ daily requests with
+  99.9% uptime
+- Implemented custom RAG (Retrieval-Augmented Generation) system improving
+  contextual accuracy by 47%
+- Deployed using Kubernetes on AWS EKS with auto-scaling capabilities to handle
+  variable load
+- Created monitoring solutions using Prometheus and Grafana to track model
+  performance metrics
+- Open-sourced evaluation framework for benchmarking LLM performance, garnering
+  500+ GitHub stars
 
-### rust-ml (Mar 2024 - Present)
+### DataFlow Analytics (2022 - 2023)
 
-- Developed simple ML algorithms from scratch in Rust to deepen understanding of
-  fundamental concepts while learning systems programming
-- Implemented linear regression, logistic regression, and simple neural networks
-  with mathematical foundations
-- Created comprehensive CI/CD pipeline with automatic testing and package
-  deployment to crates.io
-- Developed visualization tools to display algorithm performance and decision
-  boundaries
+- Developed real-time streaming analytics platform processing 10TB+ daily data
+  using Apache Kafka and Flink
+- Designed modular ETL pipelines with fault tolerance and exactly-once
+  processing guarantees
+- Created interactive visualization dashboards using React and D3.js for
+  real-time data insights
+- Implemented anomaly detection algorithms that reduced false positives by 62%
+  compared to previous solution
+- Deployed entire stack on AWS using infrastructure as code with AWS CDK
+- Authored comprehensive documentation and conducted knowledge-sharing sessions
+  for engineering teams
 
-### X-Risk Modeling with LLMs (Jan 2025)
+### NLP Toolkit (2021)
 
-- Developed a natural language processing application using Llama 3.3 via
-  Hugging Face API to parse expert estimates of existential risks
-- Implemented advanced prompt engineering techniques to extract structured
-  numerical data from unstructured text, including risk estimates and confidence
-  levels
-- Created sophisticated visualization tools to model risk projections under
-  different future scenarios (business as usual, risk reduction, risk
-  proliferation)
-- Integrated confidence scoring mechanisms to evaluate both conversion accuracy
-  and source reliability in extracted data
+- Created open-source Python package for natural language processing tasks with
+  20K+ PyPI downloads
+- Implemented customizable document classification, named entity recognition,
+  and sentiment analysis
+- Built adapter interfaces for major LLM providers (OpenAI, Anthropic, Hugging
+  Face)
+- Developed efficient text preprocessing pipeline that reduced processing time
+  by 75%
+- Created comprehensive test suite with 95% code coverage
+- Published technical documentation and API references using Sphinx and
+  ReadTheDocs
 
-### compai (Oct 2023)
+### Eco-Route (2020)
 
-- Developed a Python CLI tool for pair programming with AI using Google's GenAI
-  API (PaLM, currently deprecated)
-- Implemented a flexible template system for storing reusable prompt patterns to
-  enhance AI response quality for specific development tasks
-- Created a modular architecture with TinyDB for persistent storage and command
-  pattern for extensibility
-- Successfully published package to PyPI with automated installation scripts and
-  comprehensive documentation
+- Developed a navigation application that optimizes routes based on carbon
+  emissions
+- Implemented algorithms for real-time traffic analysis and fuel consumption
+  prediction
+- Created responsive web and mobile interfaces using React Native and Redux
+- Integrated with multiple mapping APIs and environmental data sources
+- Deployed cloud infrastructure using containerization and serverless components
+- Presented solution at ClimaTech Hackathon, winning first place among 50+ teams
 
-## Additional Context
+## Additional Skills & Information
 
-- **Career Transition:** Currently in active transition from aerospace research
-  to AI/ML, leveraging strong mathematical and engineering foundation
-- **Research Background:** Extensive experience in applied research, data
-  analysis, and complex system development
-- **International Experience:** Worked in Germany for 7+ years, comfortable in
-  multicultural environments
-- **Technical Writing:** Maintains a Substack publication on technological
-  development and philosophy
-- **Learning Approach:** Self-directed learner with proven ability to quickly
-  master new technologies and frameworks
-- **Problem-Solving:** Strong analytical skills developed through aerospace
-  research, applicable to ML and software engineering challenges
+- **Leadership:** Led cross-functional teams of 5-10 engineers, mentored junior
+  developers, and facilitated agile ceremonies
+- **Research Publications:** Co-authored 3 papers on machine learning
+  applications in industry journals
+- **Public Speaking:** Regular presenter at tech conferences including PyCon and
+  MLOps World
+- **Open Source:** Active contributor to TensorFlow, scikit-learn, and FastAPI
+  communities
+- **Additional Languages:** Proficient in SQL, GraphQL, Bash scripting, and YAML
+- **Remote Work:** Experienced in distributed team collaboration using modern
+  tools and asynchronous communication
