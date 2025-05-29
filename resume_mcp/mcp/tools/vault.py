@@ -5,9 +5,10 @@ Obsidian Vault Tools (not Resources)
 import os
 import logging
 from pathlib import Path
+from typing import Optional
 
 from resume_mcp.utils.latex import compile_latex
-from resume_mcp.utils.obsidian import fuzzy_search_files
+from resume_mcp.utils.vault import fuzzy_search_vault_files
 
 from ...config import OBSIDIAN_VAULT
 from ..base import mcp
@@ -17,10 +18,10 @@ logger = logging.getLogger(__name__)
 
 @mcp.tool(
     name="search_job_description",
-    description="Search through Obsidian vault for notes matching a job description or term")
+    description="Search through the user's vault for notes matching a job description or term")
 def search_job_description(search_param: str, limit=10) -> str:
     """
-    Search through Obsidian vault for notes matching the job description.
+    Search through the user's vault for notes matching the job description.
 
     Args:
         job_description: Search term to match against filenames
@@ -41,7 +42,7 @@ def search_job_description(search_param: str, limit=10) -> str:
     if not vault_path.is_dir():
         return f"❌ Obsidian vault path is not a directory: {OBSIDIAN_VAULT}"
 
-    results = fuzzy_search_files(
+    results = fuzzy_search_vault_files(
         search_param, min_score=50, limit=20)
 
     if not results:
@@ -98,8 +99,8 @@ def search_job_description(search_param: str, limit=10) -> str:
     return result
 
 
-@mcp.tool("read_obsidian_file", description="Read content of a specific file from the Obsidian vault")
-def read_obsidian_file(file_path: str) -> str:
+@mcp.tool("read_vault_file", description="Read content of a specific file from the user's vault")
+def read_vault_file(file_path: str) -> str:
     """
     Get content of a specific file from the Obsidian vault.
 
@@ -145,86 +146,36 @@ def read_obsidian_file(file_path: str) -> str:
 
 
 @mcp.tool(
-    name="save_obsidian_file",
-    description="Saves the content of a generated CV into the Obsidian vault"
+    name="save_file_to_vault",
+    description="Saves the provided content into file into the user's vault"
 )
-def save_cv_markdown(content: str, filename: str, vault_dir: str,  replace: bool = True) -> str:
+def save_file_to_vault(content: str, filename: str, vault_dir: str,  replace: bool = True) -> str:
     """
-    Saves the content of a newly created CV into the Obsidian vault, in the CV directory.
+    Saves the content of a file into the user's vault.
 
     Arguments:
-        content (str): The CV content in markdown format 
-        filename (str): The name of the file to save to without file extention
+        content (str): The file's content 
+        filename (str): The name of the file to save to, including file extension.
     """
 
     vault_path = OBSIDIAN_VAULT
-
-    root, ext = os.path.splitext(filename)
-    if ext or ext != ".md":
-        filename = f"{root}.md"
 
     full_path = os.path.join(vault_path, vault_dir, filename)
 
     if os.path.exists(full_path) and not replace:
         return "This file already exists and the `replace` flat has been set to false."
 
-    with open(full_path, mode='+w') as f:
+    with open(full_path, mode='w') as f:
         f.write(content)
 
     return f"The file has been successfully saved to {full_path}"
 
 
 @mcp.tool(
-    name="save_cv_pdf",
-    description="Compiles LaTeX content of a generated CV into the Obsidian vault in pdf format."
+    name="fuzzy_search_vault",
+    description="Search user's vault for files with names similar to the search term using fuzzy matching"
 )
-def save_cv_pdf(content: str, filename: str, vault_dir: str, replace: bool = True) -> str:
-    """
-    Compiles LaTeX content into a PDF and saves it in the Obsidian vault.
-
-    Args:
-        content (str): The CV content in LaTeX format
-        filename (str): The name of the file to save without file extension
-        vault_dir (str): Directory within the Obsidian vault to save the PDF
-        replace (bool): Whether to replace existing file, defaults to True
-
-    Returns:
-        str: Status message indicating success or failure
-    """
-
-    vault_path = OBSIDIAN_VAULT
-
-    # Ensure filename has .pdf extension
-    root, _ = os.path.splitext(filename)
-    pdf_filename = f"{root}.pdf"
-
-    # Create full output path
-    output_dir = os.path.join(vault_path, vault_dir)
-    full_path = os.path.join(output_dir, pdf_filename)
-
-    # Check if file exists and replace flag
-    if os.path.exists(full_path) and not replace:
-        return f"❌ File {pdf_filename} already exists and replace=False."
-
-    # Create output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
-
-    result = compile_latex(content, dest=full_path)
-
-    if "error" in result:
-        return f"Error compiling pdf: {result['error']}"
-
-    if "success" in result:
-        return f"Successfully compiled pdf to {result['success']['dest']}"
-
-    return f"Something happened while compiling, I'm not sure if the file was saved or not"
-
-
-@mcp.tool(
-    name="fuzzy_search_obsidian",
-    description="Search Obsidian vault for files with names similar to the search term using fuzzy matching"
-)
-def fuzzy_search_obsidian(
+def fuzzy_search_vault_tool(
     search_term: str,
     min_score: int = 60,
     subdir: str = "",
@@ -232,7 +183,7 @@ def fuzzy_search_obsidian(
     include_content: bool = True
 ) -> str:
     """
-    Search for files in the Obsidian vault using fuzzy string matching on filenames.
+    Search for files in the user's vault using fuzzy string matching on filenames.
 
     Args:
         search_term (str): The term to search for in filenames
@@ -257,7 +208,7 @@ def fuzzy_search_obsidian(
         return f"❌ Obsidian vault path is not a directory: {OBSIDIAN_VAULT}"
 
     # Perform fuzzy search
-    results = fuzzy_search_files(
+    results = fuzzy_search_vault_files(
         search_term=search_term,
         min_score=min_score,
         subdir=subdir,

@@ -87,15 +87,15 @@ BASELINE RESUME KEY FACTS TO PRESERVE:
 
 1. **Primary Research:**
    - `search_job_description("company name")`
-   - `fuzzy_search_obsidian("position title company")`
+   - `fuzzy_search_vault("position title company")`
    - **Constraint Check:** Note any requirements that might tempt exaggeration
 2. **Secondary Research:**
    - `search_job_description("similar role OR industry terms")`
-   - `fuzzy_search_obsidian("company name")`
+   - `fuzzy_search_vault("company name")`
    - **Authenticity Filter:** Identify which requirements can be met with
      existing experience only
 3. **Document Review:**
-   - `read_obsidian_file("path/to/relevant/file")`
+   - `read_vault_file("path/to/relevant/file")`
    - **Baseline Validation:** Cross-reference any previous applications for
      consistency
 
@@ -216,7 +216,7 @@ documentation:**
 
 ```
 SAVE PROTOCOL:
-1. `save_obsidian_file(cv_content, "CV_CompanyName_Position.md", "CVs/")`
+1. `save_file_to_vault(cv_content, "CV_CompanyName_Position.md", "CVs/")`
    - Include authenticity verification log
 2. `save_cv_pdf(latex_content, "CV_CompanyName_Position", "CVs/")`
    - Verify LaTeX preserves authenticity constraints
@@ -235,7 +235,7 @@ REPORT REQUIREMENTS:
 □ Gap analysis (what couldn't be claimed)
 □ Reframing techniques used (without exaggeration)
 
-Save using: `save_obsidian_file(comprehensive_report, "CompanyName_Position_Report_Auth_Verified.md", "CV Generation Reports/")`
+Save using: `save_file_to_vault(comprehensive_report, "CompanyName_Position_Report_Auth_Verified.md", "CV Generation Reports/")`
 ```
 
 ## Enhanced Decision Framework

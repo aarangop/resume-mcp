@@ -7,10 +7,10 @@ import pytest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from resume_mcp.utils.obsidian import (
-    save_obsidian_file,
-    read_obsidian_file,
-    fuzzy_search_files
+from resume_mcp.utils.vault import (
+    save_file_to_vault,
+    read_vault_file,
+    fuzzy_search_vault_files
 )
 
 
@@ -28,7 +28,7 @@ class TestObsidianUtils:
         mock_open.return_value.__enter__.return_value = mock_file
 
         # Call function
-        result = save_obsidian_file("Test content", "test.md")
+        result = save_file_to_vault("Test content", "test.md")
 
         # Assertions
         mock_join.assert_called_with("/mock/vault", "test.md")
@@ -51,7 +51,7 @@ class TestObsidianUtils:
         mock_open.return_value.__enter__.return_value = mock_file
 
         # Call function
-        result = read_obsidian_file("test")
+        result = read_vault_file("test")
 
         # Assertions
         mock_path.assert_called_with("/mock/vault")
@@ -78,7 +78,7 @@ class TestObsidianUtils:
         mock_path.return_value.rglob.return_value = mock_files
 
         # Call function
-        results = fuzzy_search_files("resume", min_score=55)
+        results = fuzzy_search_vault_files("resume", min_score=55)
 
         # Assertions
         mock_path.assert_called_with("/mock/vault")
@@ -118,7 +118,7 @@ class TestObsidianUtils:
         mock_path.return_value.rglob.return_value = mock_files
 
         # Call function with high min_score
-        results = fuzzy_search_files("resume", min_score=90)
+        results = fuzzy_search_vault_files("resume", min_score=90)
 
         # Should only match "resume" with high score
         assert len(results) == 1
@@ -138,7 +138,7 @@ class TestObsidianUtils:
         mock_path.return_value.rglob.return_value = mock_files
 
         # Call function with custom limit
-        results = fuzzy_search_files("resume", limit=3)
+        results = fuzzy_search_vault_files("resume", limit=3)
 
         # Should only return 3 results maximum
         assert len(results) == 3

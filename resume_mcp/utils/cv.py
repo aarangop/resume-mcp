@@ -6,7 +6,7 @@ from resume_mcp.config import OBSIDIAN_VAULT, OUTPUT_DIRECTORY
 from resume_mcp.mcp.base import AppContext
 from resume_mcp.utils.latex import compile_latex
 from resume_mcp.utils.llm import call_anthropic
-from resume_mcp.utils.obsidian import save_obsidian_file
+from resume_mcp.utils.vault import save_file_to_vault
 
 
 logger = logging.getLogger(__name__)
@@ -194,9 +194,9 @@ async def autogenerate_cv(job_description: str, company: str, position: str, app
     # Save raw LLM compilation response for debugging
     obsidian_filename = f"LLM/{company}_{position.replace(' ', '_')}_LLM_Response.md"
 
-    response_filename = save_obsidian_file(
+    response_filename = save_file_to_vault(
         content=f"# LLM Response for {company} - {position}\n\n```\n{llm_response}\n```",
-        filename=obsidian_filename
+        rel_dest=obsidian_filename
     )
 
     results["generated_files"].append(response_filename)

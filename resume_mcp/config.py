@@ -26,8 +26,7 @@ OUTPUT_DIRECTORY = os.getenv(
 OBSIDIAN_VAULT = os.getenv("OBSIDIAN_VAULT", "./obsidian_vault")
 
 # LaTeX configuration
-LATEX_COMPILER = os.getenv(
-    "LATEX_COMPILER", "pdflatex")  # or xelatex, lualatex
+LATEX_SERVER_URL = os.getenv("LATEX_SERVER_URL", "http://localhost:7474")
 LATEX_OUTPUT_DIR = os.getenv("LATEX_OUTPUT_DIR", "./templates/latex_output")
 
 # Logging

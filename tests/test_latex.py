@@ -1,10 +1,11 @@
 import os
 import pytest
-import shutil
-import subprocess
+import requests
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
-from resume_mcp.utils.latex import compile_latex
+from resume_mcp.utils.latex import compile_latex, check_latex_server, compile_latex_http
+from resume_mcp.config import LATEX_SERVER_URL
 
 
 @pytest.fixture
@@ -26,26 +27,24 @@ def test_paths():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def check_pdflatex():
-    """Check if pdflatex is installed in the system."""
-    pdflatex_path = shutil.which("pdflatex")
-    if not pdflatex_path:
+def check_latex_server_available():
+    """Check if LaTeX server is available."""
+    # If testing with mocks is enabled, skip the actual server check
+    if os.environ.get("MOCK_LATEX_SERVER") == "1":
+        return {"available": True, "details": {"pdflatex_available": True}}
+
+    # Otherwise check the real server
+    server_status = check_latex_server()
+    if not server_status["available"]:
         pytest.skip(
-            "pdflatex is not installed in the system, skipping LaTeX tests")
+            f"LaTeX server is not available: {server_status['message']}. Please start the LaTeX server with: docker-compose up -d")
 
-    # Check pdflatex version to make sure it's working
-    try:
-        result = subprocess.run(["pdflatex", "--version"],
-                                capture_output=True, text=True, timeout=5)
-        if result.returncode != 0:
-            pytest.skip(
-                "pdflatex is installed but not working correctly, skipping LaTeX tests")
-    except subprocess.TimeoutExpired:
-        pytest.skip("pdflatex command timed out, skipping LaTeX tests")
-    except Exception as e:
-        pytest.skip(f"Error checking pdflatex: {e}, skipping LaTeX tests")
+    # Check if pdflatex is available on the server
+    if not server_status["details"].get("pdflatex_available", False):
+        pytest.skip(
+            "pdflatex is not available on the LaTeX server. Check server configuration.")
 
-    return pdflatex_path
+    return server_status
 
 
 def test_compile_latex(test_paths):
@@ -118,3 +117,122 @@ def test_compile_latex_error_handling():
     # The PDF file should not exist
     assert not os.path.exists(
         output_pdf_path), "PDF file was created despite LaTeX errors"
+
+
+def test_check_latex_server():
+    """Test that check_latex_server correctly reports the server status."""
+    server_status = check_latex_server()
+    assert isinstance(server_status, dict)
+    assert "available" in server_status
+    assert "message" in server_status
+    assert "details" in server_status
+
+
+@pytest.mark.parametrize(
+    "status_code,expected_available",
+    [
+        (200, True),
+        (500, False),
+        (404, False),
+    ],
+)
+def test_check_latex_server_response_handling(status_code, expected_available):
+    """Test that check_latex_server correctly handles different server responses."""
+    mock_response = MagicMock()
+    mock_response.status_code = status_code
+    if status_code == 200:
+        mock_response.json.return_value = {"pdflatex_available": True}
+
+    with patch("requests.get", return_value=mock_response):
+        server_status = check_latex_server()
+        assert server_status["available"] == expected_available
+
+
+def test_check_latex_server_connection_error():
+    """Test that check_latex_server correctly handles connection errors."""
+    with patch("requests.get", side_effect=requests.exceptions.ConnectionError("Connection error")):
+        server_status = check_latex_server()
+        assert not server_status["available"]
+        assert "LaTeX server is not running" in server_status["message"]
+
+
+@pytest.mark.parametrize(
+    "server_response,expected_result_key",
+    [
+        ({"status_code": 200, "content": b"mock pdf content"}, "success"),
+        ({"status_code": 500, "text": "Server error",
+         "json": lambda: {"detail": "Compilation error"}}, "error"),
+    ],
+)
+def test_compile_latex_http_response_handling(server_response, expected_result_key):
+    """Test that compile_latex_http correctly handles different server responses."""
+    mock_response = MagicMock()
+    mock_response.status_code = server_response["status_code"]
+
+    if "content" in server_response:
+        mock_response.content = server_response["content"]
+
+    if "text" in server_response:
+        mock_response.text = server_response["text"]
+
+    if "json" in server_response:
+        mock_response.json = server_response["json"]
+
+    server_status = {"available": True,
+                     "details": {"pdflatex_available": True}}
+
+    with patch("resume_mcp.utils.latex.check_latex_server", return_value=server_status), \
+            patch("requests.post", return_value=mock_response), \
+            patch("builtins.open", MagicMock()), \
+            patch("os.path.exists", return_value=True):
+
+        result = compile_latex_http("mock latex content", "/tmp/output.pdf")
+        assert expected_result_key in result
+
+
+def test_compile_latex_http_server_unavailable():
+    """Test that compile_latex_http handles when the server is unavailable."""
+    server_status = {"available": False,
+                     "message": "Server offline", "details": {}}
+
+    with patch("resume_mcp.utils.latex.check_latex_server", return_value=server_status):
+        result = compile_latex_http("mock latex content", "/tmp/output.pdf")
+        assert "error" in result
+        assert "Server offline" in result["error"]
+
+
+def test_compile_latex_http_server_no_pdflatex():
+    """Test that compile_latex_http handles when pdflatex is not available on the server."""
+    server_status = {"available": True,
+                     "details": {"pdflatex_available": False}}
+
+    with patch("resume_mcp.utils.latex.check_latex_server", return_value=server_status):
+        result = compile_latex_http("mock latex content", "/tmp/output.pdf")
+        assert "error" in result
+        assert "pdflatex is not available" in result["error"]
+
+
+def test_compile_latex_http_request_exception():
+    """Test that compile_latex_http handles request exceptions."""
+    server_status = {"available": True,
+                     "details": {"pdflatex_available": True}}
+
+    with patch("resume_mcp.utils.latex.check_latex_server", return_value=server_status), \
+            patch("requests.post", side_effect=requests.exceptions.RequestException("Network error")):
+
+        result = compile_latex_http("mock latex content", "/tmp/output.pdf")
+        assert "error" in result
+        assert "Network error" in result["error"]
+
+
+def test_compile_latex_http_timeout():
+    """Test that compile_latex_http handles timeouts."""
+    server_status = {"available": True,
+                     "details": {"pdflatex_available": True}}
+
+    with patch("resume_mcp.utils.latex.check_latex_server", return_value=server_status), \
+            patch("requests.post", side_effect=requests.exceptions.Timeout("Timeout")):
+
+        result = compile_latex_http("mock latex content", "/tmp/output.pdf")
+        assert "error" in result
+        assert "timed out" in result["error"]

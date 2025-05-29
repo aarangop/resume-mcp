@@ -6,6 +6,8 @@ import logging
 import subprocess
 from pathlib import Path
 
+from resume_mcp.utils.latex import check_pdflatex
+
 from ..base import mcp, get_app_context
 from ...config import LATEX_OUTPUT_DIR, SERVER_NAME
 
@@ -58,6 +60,7 @@ def get_server_status() -> str:
         baseline_length = len(app_ctx.resume_manager.get_baseline_content())
         latex_template_length = len(
             app_ctx.prompt_manager.get_latex_template() or "")
+        pdflatex_available = check_pdflatex()
 
         return f"""# Resume Tailoring Server Status
 
@@ -68,6 +71,7 @@ def get_server_status() -> str:
 - **LaTeX Template Path:** {app_ctx.prompt_manager.latex_template_path or 'Not configured'}
 - **Output Directory:** {app_ctx.output_directory}
 - **LaTeX Output Directory:** {LATEX_OUTPUT_DIR}
+- **pdflatex available:** {'✅' if pdflatex_available else '❌'}
 
 ## File Status
 - **Baseline Resume:** {'✅ Found' if resume_exists else '❌ Not Found'}

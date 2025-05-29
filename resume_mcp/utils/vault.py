@@ -9,9 +9,22 @@ from resume_mcp.config import OBSIDIAN_VAULT
 logger = logging.getLogger(__name__)
 
 
-def save_obsidian_file(content: str, filename: str) -> Optional[str]:
-    root, _ = os.path.splitext(filename)
-    full_path = os.path.join(OBSIDIAN_VAULT, f"{root}.md")
+def save_file_to_vault(content: str, rel_dest: str) -> Optional[str]:
+    """
+    Save content to a file within the Obsidian vault, or to a folder in the file system specified by the user through the OBSIDIAN_VAULT environment variable.
+
+    Args:
+        content (str): The content to write to the file.
+        rel_dest (str): The name of the destination file to create or overwrite, relative to the OBSIDIAN_VAULT path.
+
+    Returns:
+        Optional[str]: The full path to the created file if successful, None otherwise.
+
+    Raises:
+        No exceptions are raised directly; exceptions during file writing are caught
+        and result in a None return value.
+    """
+    full_path = os.path.join(OBSIDIAN_VAULT, rel_dest)
     try:
         with open(full_path, mode="w", encoding='utf-8') as f:
             f.write(content)
@@ -21,14 +34,33 @@ def save_obsidian_file(content: str, filename: str) -> Optional[str]:
     return full_path
 
 
-def read_obsidian_file(filename: str) -> str:
-    obsidian_path = Path(OBSIDIAN_VAULT)
+def read_vault_file(filename: str, min_score=70) -> str:
+    """
+    Reads the contents of a file in the vault based on fuzzy matching of the filename.
+
+    This function searches for a file in the vault using fuzzy matching and returns its contents.
+    If no match is found with a score of at least 80, an exception is raised.
+
+    Args:
+        filename (str): The name of the file to search for in the vault.
+
+    Returns:
+        str: The contents of the matched file.
+
+    Raises:
+        Exception: If no files in the vault match the given filename with the minimum score.
+
+    Example:
+        >>> content = read_vault_file("my_note.md")
+    """
 
     root, _ = os.path.splitext(filename)
-    match = next(obsidian_path.rglob(f"{root}.md"), None)
+    match = fuzzy_search_vault_files(filename, min_score=min_score, limit=1)
 
     if not match:
         raise Exception(f"No files matched '{root}' in Obsidian vault")
+
+    match = match[0]["path"]
 
     with open(match, mode='r', encoding='utf-8') as f:
         content = f.read()
@@ -36,7 +68,7 @@ def read_obsidian_file(filename: str) -> str:
     return content
 
 
-def fuzzy_search_files(
+def fuzzy_search_vault_files(
         search_term: str,
         min_score: int = 60,
         subdir: Optional[str] = None,

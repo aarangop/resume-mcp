@@ -6,6 +6,8 @@ import logging
 import sys
 import os
 
+from resume_mcp.utils.latex import check_pdflatex
+
 from ..base import mcp, get_app_context
 
 logger = logging.getLogger(__name__)
@@ -151,3 +153,8 @@ To test your Obsidian resources, try:
 
     except Exception as e:
         return f"❌ Error getting resource debug info: {str(e)}"
+
+
+@mcp.tool(name="check_pdflatex", description="Checks whether pdflatex is installed on the user's system")
+def check_pdflatex_tool() -> bool:
+    return check_pdflatex()
