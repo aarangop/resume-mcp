@@ -158,3 +158,18 @@ To test your Obsidian resources, try:
 @mcp.tool(name="check_pdflatex", description="Checks whether pdflatex is installed on the user's system")
 def check_pdflatex_tool() -> bool:
     return check_pdflatex()
+
+
+@mcp.tool(name="check_latex_server", description="Checks if the LaTeX compilation server is available")
+def check_latex_server_tool():
+    """
+    Check if the containerized LaTeX compilation server is running and healthy.
+
+    Returns:
+        Dictionary with server health status information including:
+        - available: whether the server is running
+        - message: status message
+        - details: additional server information (if available)
+    """
+    from resume_mcp.utils.latex import check_latex_server
+    return check_latex_server()

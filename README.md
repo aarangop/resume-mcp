@@ -18,7 +18,7 @@ systems.
 ## 📋 Prerequisites
 
 - Python 3.10 or higher
-- LaTeX installation (for PDF generation)
+- Docker or Podman (for LaTeX compilation service)
 - Node.js/npm (for MCP Inspector)
 - Obsidian (optional, for vault integration)
   - If not using Obsidian, you can use any directory on your file system, just
@@ -41,10 +41,43 @@ systems.
    uv pip install -e .
    ```
 
-3. Install the MCP Inspector (for debugging/development):
+3. Start the LaTeX compilation server (required for PDF generation):
+
+   ```bash
+   # Using Docker
+   cd latex-compilation-server
+   docker-compose up -d
+   cd ..
+
+   # OR using Podman
+   cd latex-compilation-server
+   podman-compose up -d
+   cd ..
+   ```
+
+   You can verify the server is running with:
+
+   ```bash
+   curl http://localhost:7474/health
+   ```
+
+4. Install the MCP Inspector (for debugging/development):
    ```bash
    npm install -g @modelcontextprotocol/inspector
    ```
+
+### Initial Repository Setup
+
+If you cloned the repository without the `--recursive` flag, you might need to
+initialize the LaTeX compilation server submodule:
+
+```bash
+git submodule init
+git submodule update
+```
+
+This ensures that you have the complete LaTeX compilation server code in the
+`latex-compilation-server` directory.
 
 ## 🔧 Configuration
 
@@ -64,8 +97,8 @@ OUTPUT_DIRECTORY="./templates/tailored_resumes"
 # Obsidian vault configuration (optional)
 OBSIDIAN_VAULT="/path/to/your/obsidian/vault"
 
-# LaTeX configuration
-LATEX_COMPILER="pdflatex"  # or xelatex, lualatex
+# LaTeX compilation server configuration
+LATEX_SERVER_URL="http://localhost:7474"
 LATEX_OUTPUT_DIR="./templates/latex_output"
 
 # Logging
@@ -139,6 +172,9 @@ descriptions.
 2. **Validation Tools**:
 
    - `validate_latex_template`: Check if your LaTeX template is valid
+   - `check_latex_server`: Check if the LaTeX compilation server is available
+   - `check_latex_server_status`: Get detailed status of the LaTeX server
+   - `start_latex_server_help`: Get instructions for starting the LaTeX server
 
 3. **Obsidian Tools**:
 
@@ -147,7 +183,74 @@ descriptions.
 
 4. **CV Tools**:
    - `save_tailored_cv`: Save a tailored CV in Markdown format
-   - `generate_latex_cv`: Convert a tailored CV to LaTeX/PDF
+   - `generate_latex_cv`: Convert a tailored CV to LaTeX/PDF using the secure
+     containerized LaTeX compilation server
+
+## 🖨️ LaTeX Compilation Server
+
+This project includes a containerized LaTeX compilation service that securely
+generates PDF files from LaTeX documents without requiring LaTeX installation on
+your local system. The service runs as a separate microservice in a Docker
+container and is included in this repository as a submodule in the
+`latex-compilation-server` directory.
+
+### Benefits:
+
+- **Security**: Isolates LaTeX compilation in a Docker container, preventing
+  potential system command exploitation
+- **Consistency**: Works the same across all platforms (macOS, Windows, Linux)
+- **Simplified Setup**: No need to install LaTeX and its dependencies locally
+
+### How it Works:
+
+1. The MCP server sends LaTeX content to the containerized HTTP service
+2. The service compiles the document in an isolated environment
+3. The compiled PDF is returned to the MCP server
+4. The PDF is saved to your specified output directory
+
+For detailed architecture information, see
+[LaTeX Server Architecture](/docs/latex_server_architecture.md)
+
+### Management:
+
+Start/stop the service with Docker:
+
+```bash
+cd latex-compilation-server
+docker-compose up -d    # Start server
+docker-compose down     # Stop server
+docker-compose logs -f  # View logs
+```
+
+Or with Podman:
+
+```bash
+cd latex-compilation-server
+podman-compose up -d    # Start server
+podman-compose down     # Stop server
+podman-compose logs -f  # View logs
+```
+
+## 🛡️ Security Considerations
+
+### LaTeX Compilation Security
+
+This project uses a containerized LaTeX compilation service rather than direct
+system calls for several security reasons:
+
+1. **Isolation**: The LaTeX compilation process runs in a Docker container,
+   isolated from the host system
+2. **No Shell Commands**: The MCP server never executes shell commands directly,
+   preventing potential command injection
+3. **Sandboxed Environment**: LaTeX code runs in a controlled environment with
+   limited permissions
+4. **API-based Interaction**: All communication happens through a well-defined
+   HTTP API rather than shell execution
+5. **Stateless Processing**: Files are not persisted in the container beyond
+   compilation
+
+This architecture ensures that even if a malicious LaTeX document were to be
+submitted, it would not be able to access or affect your host system.
 
 ## 📄 Template Files
 
@@ -167,11 +270,17 @@ will be replaced with the corresponding sections from your tailored resume.
 
 1. Set up your baseline resume in `templates/baseline_resume.md`
 2. Configure your LaTeX template in `templates/latex_template.tex`
-3. Run the server: `python main.py`
-4. Connect with an MCP client (such as an integrated LLM)
-5. Submit a job description to the "Tailor CV" prompt
-6. Generate a LaTeX/PDF version using the CV tools
-7. Review and use your tailored resume!
+3. Start the LaTeX compilation server:
+   ```bash
+   cd latex-compilation-server
+   docker-compose up -d
+   cd ..
+   ```
+4. Run the MCP server: `python main.py`
+5. Connect with an MCP client (such as an integrated LLM)
+6. Submit a job description to the "Tailor CV" prompt
+7. Generate a LaTeX/PDF version using the CV tools
+8. Review and use your tailored resume!
 
 ## 🔍 Troubleshooting
 
@@ -214,6 +323,40 @@ If Obsidian integration isn't working:
 1. Verify the `OBSIDIAN_VAULT` path in your `.env` file
 2. Check file permissions for the Obsidian vault directory
 3. Test basic Obsidian operations through the debug server
+
+#### LaTeX Compilation Server Issues
+
+If PDF generation is failing:
+
+1. Check if the LaTeX server is running:
+
+   ```bash
+   curl http://localhost:7474/health
+   ```
+
+2. If not running, start it:
+
+   ```bash
+   cd latex-compilation-server
+   docker-compose up -d
+   ```
+
+3. Check server logs if you encounter issues:
+
+   ```bash
+   docker-compose logs latex-server
+   ```
+
+4. If you need to restart the server:
+
+   ```bash
+   docker-compose restart latex-server
+   ```
+
+5. Verify your `.env` file has the correct server URL:
+   ```
+   LATEX_SERVER_URL="http://localhost:7474"
+   ```
 
 ### Advanced Debugging
 

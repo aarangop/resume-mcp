@@ -1,0 +1,3 @@
+[submodule "latex-compilation-server"]
+	path = latex-compilation-server
+	url = https://github.com/aarangop/latex-compilation-server.git
